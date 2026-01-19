@@ -48,7 +48,6 @@ public class MainActivity extends AppCompatActivity implements FirebaseAuth.Auth
 
         setupBottomNavigation();
         setupFab();
-        setupGuestBanner();
 
         // Load default fragment
         if (savedInstanceState == null) {
@@ -91,18 +90,6 @@ public class MainActivity extends AppCompatActivity implements FirebaseAuth.Auth
         });
     }
 
-    private void setupGuestBanner() {
-        if (authManager.isGuest()) {
-            binding.guestBanner.setVisibility(View.VISIBLE);
-            binding.btnLogin.setOnClickListener(v -> {
-                startActivity(new Intent(this, LoginActivity.class));
-                finish();
-            });
-        } else {
-            binding.guestBanner.setVisibility(View.GONE);
-        }
-    }
-
     private void loadFragment(Fragment fragment, String tag) {
         if (tag.equals(currentFragmentTag)) {
             return;
@@ -132,7 +119,7 @@ public class MainActivity extends AppCompatActivity implements FirebaseAuth.Auth
 
     @Override
     public void onAuthStateChanged(FirebaseAuth firebaseAuth) {
-        setupGuestBanner();
+        // Auth state changed - handled by individual fragments
     }
 
     public void refreshDashboard() {

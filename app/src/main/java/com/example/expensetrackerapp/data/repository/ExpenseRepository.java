@@ -28,6 +28,7 @@ public class ExpenseRepository {
     private final ExpenseDao expenseDao;
     private final FirebaseFirestore firestore;
     private final AuthManager authManager;
+    private final com.example.expensetrackerapp.utils.PreferenceManager preferenceManager;
     private static ExpenseRepository instance;
 
     private ExpenseRepository(Context context) {
@@ -35,6 +36,7 @@ public class ExpenseRepository {
         expenseDao = db.expenseDao();
         firestore = FirebaseFirestore.getInstance();
         authManager = AuthManager.getInstance();
+        preferenceManager = com.example.expensetrackerapp.utils.PreferenceManager.getInstance(context);
     }
 
     public static synchronized ExpenseRepository getInstance(Context context) {
@@ -68,6 +70,9 @@ public class ExpenseRepository {
             if (!authManager.isGuest()) {
                 syncToCloud(expense, listener);
             } else {
+                // Mark that we have guest data
+                preferenceManager.setGuestDataExists(true);
+
                 if (listener != null) {
                     listener.onSuccess();
                 }
