@@ -54,8 +54,7 @@ dependencies {
     implementation(libs.firebase.auth)
     implementation(libs.firebase.firestore)
     annotationProcessor(libs.room.compiler)
-    implementation("com.google.firebase:firebase-auth:24.0.1")
-    implementation("com.google.firebase:firebase-firestore:26.0.2")
+
     // Lifecycle
     implementation(libs.lifecycle.viewmodel)
     implementation(libs.lifecycle.livedata)

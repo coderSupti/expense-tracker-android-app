@@ -46,9 +46,12 @@ public class DashboardFragment extends Fragment {
     private AuthManager authManager;
     private TransactionAdapter recentAdapter;
     private CategoryAdapter categoryAdapter;
-    
+
     private List<Expense> allExpenses = new ArrayList<>();
     private String currentCategory = "All";
+
+    private Double currentIncome = 0.0;
+    private Double currentExpense = 0.0;
 
     @Nullable
     @Override
@@ -111,12 +114,13 @@ public class DashboardFragment extends Fragment {
         // Category Filter Recycler
         List<CategoryItem> categories = new ArrayList<>();
         categories.add(new CategoryItem("All", R.drawable.ic_list));
-        
+
         categoryAdapter = new CategoryAdapter(requireContext(), categories, category -> {
             currentCategory = category;
             filterTransactions();
         });
-        binding.rvCategoryFilters.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
+        binding.rvCategoryFilters
+                .setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
         binding.rvCategoryFilters.setAdapter(categoryAdapter);
     }
 
@@ -128,17 +132,25 @@ public class DashboardFragment extends Fragment {
         expenseRepository.getTotalExpenses(monthRange[0], monthRange[1]).observe(getViewLifecycleOwner(),
                 totalExpense -> {
                     if (totalExpense != null) {
+                        currentExpense = totalExpense;
                         binding.tvTotalExpense.setText(CurrencyUtils.formatAmount(totalExpense, currency));
-                        updateBalance();
+                    } else {
+                        currentExpense = 0.0;
+                        binding.tvTotalExpense.setText(CurrencyUtils.formatAmount(0.0, currency));
                     }
+                    updateBalance();
                 });
 
         // Observe total income
         expenseRepository.getTotalIncome(monthRange[0], monthRange[1]).observe(getViewLifecycleOwner(), totalIncome -> {
             if (totalIncome != null) {
+                currentIncome = totalIncome;
                 binding.tvTotalIncome.setText(CurrencyUtils.formatAmount(totalIncome, currency));
-                updateBalance();
+            } else {
+                currentIncome = 0.0;
+                binding.tvTotalIncome.setText(CurrencyUtils.formatAmount(0.0, currency));
             }
+            updateBalance();
         });
 
         // Observe recent transactions
@@ -178,17 +190,28 @@ public class DashboardFragment extends Fragment {
 
     private int getCategoryIcon(String category) {
         switch (category) {
-            case Constants.CATEGORY_FOOD: return R.drawable.ic_restaurant;
-            case Constants.CATEGORY_TRANSPORT: return R.drawable.ic_transport;
-            case Constants.CATEGORY_SHOPPING: return R.drawable.ic_shopping_bag;
-            case Constants.CATEGORY_BILLS: return R.drawable.ic_receipt;
-            case Constants.CATEGORY_ENTERTAINMENT: return R.drawable.ic_movie;
-            case Constants.CATEGORY_HEALTHCARE: return R.drawable.ic_medical; 
-            case Constants.CATEGORY_EDUCATION: return R.drawable.ic_school;
-            case Constants.CATEGORY_SALARY: return R.drawable.ic_attach_money;
-            case Constants.CATEGORY_INVESTMENT: return R.drawable.ic_trending_up;
-            case Constants.CATEGORY_OTHERS: return R.drawable.ic_more_horiz;
-            default: return R.drawable.ic_list;
+            case Constants.CATEGORY_FOOD:
+                return R.drawable.ic_restaurant;
+            case Constants.CATEGORY_TRANSPORT:
+                return R.drawable.ic_transport;
+            case Constants.CATEGORY_SHOPPING:
+                return R.drawable.ic_shopping_bag;
+            case Constants.CATEGORY_BILLS:
+                return R.drawable.ic_receipt;
+            case Constants.CATEGORY_ENTERTAINMENT:
+                return R.drawable.ic_movie;
+            case Constants.CATEGORY_HEALTHCARE:
+                return R.drawable.ic_medical;
+            case Constants.CATEGORY_EDUCATION:
+                return R.drawable.ic_school;
+            case Constants.CATEGORY_SALARY:
+                return R.drawable.ic_attach_money;
+            case Constants.CATEGORY_INVESTMENT:
+                return R.drawable.ic_trending_up;
+            case Constants.CATEGORY_OTHERS:
+                return R.drawable.ic_more_horiz;
+            default:
+                return R.drawable.ic_list;
         }
     }
 
@@ -204,7 +227,7 @@ public class DashboardFragment extends Fragment {
 
         // Only show top 5 of filtered results for the dashboard
         List<Expense> recent = filtered.size() > 5 ? filtered.subList(0, 5) : filtered;
-        
+
         if (!recent.isEmpty()) {
             recentAdapter.updateData(recent);
             binding.rvRecentTransactions.setVisibility(View.VISIBLE);
@@ -218,14 +241,7 @@ public class DashboardFragment extends Fragment {
     private void updateBalance() {
         String currency = preferenceManager.getCurrency();
 
-        // Parse amounts from text views
-        String expenseText = binding.tvTotalExpense.getText().toString();
-        String incomeText = binding.tvTotalIncome.getText().toString();
-
-        double expense = CurrencyUtils.parseAmount(expenseText);
-        double income = CurrencyUtils.parseAmount(incomeText);
-
-        double balance = income - expense;
+        double balance = currentIncome - currentExpense;
         // Format with space between sign and amount for design: "- $66.00"
         String formattedBalance = CurrencyUtils.formatAmount(Math.abs(balance), currency);
         if (balance < 0) {
@@ -244,7 +260,7 @@ public class DashboardFragment extends Fragment {
         super.onDestroyView();
         binding = null;
     }
-    
+
     // --- Helper Classes ---
 
     private static class CategoryItem {
