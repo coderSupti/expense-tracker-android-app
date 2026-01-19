@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="80dp">
+
+            <!-- Header Section with Curve -->
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <!-- Curved Background -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="280dp"
+                    android:background="@drawable/bg_header_curve"
+                    android:backgroundTint="@color/primary"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingHorizontal="24dp"
+                    android:paddingTop="32dp">
+
+                    <!-- Top Bar: Greeting & Date -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/tvGreeting"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/jakarta_sans"
+                                android:text="Good Afternoon,"
+                                android:textColor="@color/white"
+                                android:textSize="18sp"
+                                android:alpha="0.9" />
+
+                            <TextView
+                                android:id="@+id/tvUserName"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/space_grotesk"
+                                android:text="User"
+                                android:textColor="@color/white"
+                                android:textSize="28sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+
+                        <!-- Date Chip -->
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/bg_date_chip"
+                            android:gravity="center_vertical"
+                            android:paddingHorizontal="12dp"
+                            android:paddingVertical="8dp">
+
+                            <TextView
+                                android:id="@+id/tvCurrentMonth"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="January 2026"
+                                android:textColor="@color/white"
+                                android:textSize="12sp"
+                                android:fontFamily="@font/jakarta_sans"
+                                android:textStyle="bold" />
+
+
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <!-- Total Balance -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:orientation="vertical"
+                        android:layout_marginTop="24dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Total Balance"
+                            android:textColor="@color/white"
+                            android:alpha="0.8"
+                            android:textSize="14sp"
+                            android:fontFamily="@font/jakarta_sans"/>
+
+                        <TextView
+                            android:id="@+id/tvBalance"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="- $66.00"
+                            android:textColor="@color/white"
+                            android:textSize="48sp"
+                            android:textStyle="bold"
+                            android:fontFamily="@font/space_grotesk"/>
+                    </LinearLayout>
+
+                    <!-- Cards Row (Overlapping) -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="32dp"
+                        android:paddingBottom="16dp">
+
+                        <!-- Income -->
+                        <com.google.android.material.card.MaterialCardView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:minHeight="120dp"
+                            android:layout_weight="1"
+                            android:layout_marginEnd="8dp"
+                            app:cardCornerRadius="24dp"
+                            app:cardElevation="1dp"
+                            android:layout_marginBottom="4dp">
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:orientation="vertical"
+                                android:padding="16dp">
+
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="8dp"
+                                    android:gravity="center_vertical"
+                                    android:orientation="horizontal">
+
+                                    <com.google.android.material.imageview.ShapeableImageView
+                                        android:layout_width="20dp"
+                                        android:layout_height="20dp"
+                                        android:src="@drawable/ic_arrow_up"
+                                        app:tint="@color/income"/>
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginStart="8dp"
+                                        android:fontFamily="@font/jakarta_sans"
+                                        android:text="Income"
+                                        android:textColor="@color/text_secondary"
+                                        android:textSize="14sp" />
+                                </LinearLayout>
+
+                                <TextView
+                                    android:id="@+id/tvTotalIncome"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/space_grotesk"
+                                    android:text="$8,488.00"
+                                    android:textColor="@color/income"
+                                    android:textSize="20sp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+                        </com.google.android.material.card.MaterialCardView>
+
+                        <!-- Expense -->
+                        <com.google.android.material.card.MaterialCardView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:minHeight="120dp"
+                            android:layout_weight="1"
+                            android:layout_marginStart="8dp"
+                            app:cardBackgroundColor="@color/card_background"
+                            app:cardCornerRadius="24dp"
+                            app:cardElevation="1dp">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:orientation="vertical"
+                                android:padding="16dp">
+
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center_vertical"
+                                    android:orientation="horizontal"
+                                    android:layout_marginBottom="8dp">
+
+                                    <ImageView
+                                        android:layout_width="20dp"
+                                        android:layout_height="match_parent"
+                                        android:src="@drawable/ic_arrow_downward"
+                                        app:tint="@color/error" />
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginStart="8dp"
+                                        android:fontFamily="@font/jakarta_sans"
+                                        android:text="Expense"
+                                        android:textColor="@color/text_secondary"
+                                        android:textSize="14sp" />
+                                </LinearLayout>
+
+                                <TextView
+                                    android:id="@+id/tvTotalExpense"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/space_grotesk"
+                                    android:text="$66.00"
+                                    android:textColor="@color/error"
+                                    android:textSize="20sp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+                        </com.google.android.material.card.MaterialCardView>
+                    </LinearLayout>
+                </LinearLayout>
+            </FrameLayout>
+
+            <!-- Categories Recycler View -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvCategoryFilters"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingHorizontal="24dp"
+                android:layout_marginTop="16dp"
+                android:clipToPadding="false"
+                tools:listitem="@layout/item_category_filter"
+                tools:itemCount="4"/>
+
+            <!-- Transactions Header -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="12dp"
+                android:fontFamily="@font/jakarta_sans"
+                android:text="TODAY"
+                android:textColor="@color/text_secondary"
+                android:textSize="12sp"
+                android:letterSpacing="0.05" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvRecentTransactions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"
+                android:paddingHorizontal="16dp"
+                tools:listitem="@layout/item_transaction"
+                tools:itemCount="3" />
+
+            <!-- Empty State -->
+            <LinearLayout
+                android:id="@+id/layoutEmptyState"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="32dp"
+                android:visibility="gone">
+
+                <ImageView
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
+                    android:src="@drawable/ic_empty_transactions"
+                    app:tint="@color/text_hint" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/jakarta_sans"
+                    android:text="No transactions yet"
+                    android:textColor="@color/text_secondary" />
+            </LinearLayout>
+
+            <!-- Hidden Views (Compatibility) -->
+            <View android:id="@+id/cardBudget" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone"/>
+            <View android:id="@+id/progressBudget" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone"/>
+            <TextView android:id="@+id/tvBudgetAmount" android:layout_width="wrap_content" android:layout_height="wrap_content" android:visibility="gone"/>
+            <TextView android:id="@+id/tvBudgetSpent" android:layout_width="wrap_content" android:layout_height="wrap_content" android:visibility="gone"/>
+            <TextView android:id="@+id/tvBudgetRemaining" android:layout_width="wrap_content" android:layout_height="wrap_content" android:visibility="gone"/>
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
