@@ -72,13 +72,45 @@ public class LoginActivity extends AppCompatActivity {
         // Attempt login with Firebase
         authManager.signIn(email, password)
                 .addOnCompleteListener(task -> {
-                    showLoading(false);
-
                     if (task.isSuccessful()) {
                         // Login successful
                         showSuccess("Login successful!");
-                        navigateToMain();
+
+                        // Check if we need to sync guest data
+                        if (preferenceManager.hasGuestData()) {
+                            showLoading(true); // Keep loading
+                            Toast.makeText(this, "Syncing guest data...", Toast.LENGTH_SHORT).show();
+
+                            com.example.expensetrackerapp.data.repository.ExpenseRepository.getInstance(this)
+                                    .syncGuestDataToCloud(
+                                            new com.example.expensetrackerapp.data.repository.ExpenseRepository.OnSyncCompleteListener() {
+                                                @Override
+                                                public void onSuccess(int syncedCount) {
+                                                    preferenceManager.setGuestDataExists(false);
+                                                    if (syncedCount > 0) {
+                                                        Toast.makeText(LoginActivity.this,
+                                                                "Synced " + syncedCount + " items from guest session",
+                                                                Toast.LENGTH_LONG).show();
+                                                    }
+                                                    showLoading(false);
+                                                    navigateToMain();
+                                                }
+
+                                                @Override
+                                                public void onFailure(String error) {
+                                                    // Even if sync fails, let them in, maybe retry later?
+                                                    // For now, just log and proceed
+                                                    showError("Failed to sync guest data: " + error);
+                                                    showLoading(false);
+                                                    navigateToMain();
+                                                }
+                                            });
+                        } else {
+                            showLoading(false);
+                            navigateToMain();
+                        }
                     } else {
+                        showLoading(false);
                         // Login failed
                         String error = task.getException() != null
                                 ? task.getException().getMessage()

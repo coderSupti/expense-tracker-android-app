@@ -46,13 +46,54 @@ public class CurrencyUtils {
      * Parse amount string to double.
      */
     public static double parseAmount(String amountString) {
+        if (amountString == null || amountString.isEmpty()) {
+            return 0.0;
+        }
         try {
-            // Remove any currency symbols and whitespace
-            String cleaned = amountString.replaceAll("[^\\d.,]", "").trim();
-            // Replace comma with dot for parsing
-            cleaned = cleaned.replace(",", ".");
+            // Remove any non-numeric characters EXCEPT for:
+            // - digits
+            // - decimal separator (dot or comma)
+            // - grouping separator (dot or comma)
+            // - minus sign
+            // However, since we don't know the locale for sure, relying on
+            // NumberFormat.parse is safer if the string comes from formatAmount.
+
+            // First, try simple parsing if it's just a number
+            // Remove currency symbol and whitespace
+            String cleaned = amountString.replaceAll("[^\\d.,-]", "").trim();
+
+            // If the string contains both . and , attempt to determine which is decimal
+            if (cleaned.contains(".") && cleaned.contains(",")) {
+                // Usually the last one is the decimal separator
+                int lastDot = cleaned.lastIndexOf(".");
+                int lastComma = cleaned.lastIndexOf(",");
+                if (lastDot > lastComma) {
+                    // 1,234.56 -> remove commas
+                    cleaned = cleaned.replace(",", "");
+                } else {
+                    // 1.234,56 -> remove dots, replace comma with dot
+                    cleaned = cleaned.replace(".", "").replace(",", ".");
+                }
+            } else if (cleaned.contains(",")) {
+                // Only comma. Could be 1,234 or 12,34 (decimal).
+                // Ambiguous without locale. Assumption: user input or standard format.
+                // If it has more than 3 chars after comma, likely grouping.
+                // But let's assume if it is used for parsing formatted currency from this app,
+                // it follows Locale.getDefault().
+                NumberFormat formatter = NumberFormat.getNumberInstance(Locale.getDefault());
+                Number number = formatter.parse(cleaned);
+                if (number != null)
+                    return number.doubleValue();
+            }
+
+            // Fallback to Double.parseDouble for simple cases or after cleaning
+            // Replace comma with dot if it's the only separator remaining and likely a
+            // decimal
+            if (cleaned.contains(",")) {
+                cleaned = cleaned.replace(",", ".");
+            }
             return Double.parseDouble(cleaned);
-        } catch (NumberFormatException e) {
+        } catch (Exception e) {
             return 0.0;
         }
     }

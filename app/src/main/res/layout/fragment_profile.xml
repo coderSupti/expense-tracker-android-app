@@ -148,7 +148,7 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/jakarta_sans"
                         android:text="@string/sync_data"
-                        android:textColor="@color/white"
+                        android:textColor="@color/text_primary"
                         android:textSize="15sp"
                         android:textStyle="bold" />
 
@@ -163,10 +163,14 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnGuestLogin"
+                    style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
                     android:text="Login"
-                    android:textColor="@color/white"
+                    android:textColor="#000000"
+                    android:textSize="14sp"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
                     app:backgroundTint="@color/primary"
                     app:cornerRadius="12dp" />
             </LinearLayout>

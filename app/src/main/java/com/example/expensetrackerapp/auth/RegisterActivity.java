@@ -78,7 +78,46 @@ public class RegisterActivity extends AppCompatActivity {
 
                                 showLoading(false);
                                 showSuccess("Account created successfully!");
-                                navigateToMain();
+
+                                // Check if we need to sync guest data
+                                com.example.expensetrackerapp.utils.PreferenceManager preferenceManager = com.example.expensetrackerapp.utils.PreferenceManager
+                                        .getInstance(RegisterActivity.this);
+                                if (preferenceManager.hasGuestData()) {
+                                    binding.progressBar.setVisibility(View.VISIBLE); // Keep loading
+                                    // Ideally update text if possible, or just toast
+                                    android.widget.Toast.makeText(RegisterActivity.this, "Syncing guest data...",
+                                            android.widget.Toast.LENGTH_SHORT).show();
+
+                                    com.example.expensetrackerapp.data.repository.ExpenseRepository
+                                            .getInstance(RegisterActivity.this)
+                                            .syncGuestDataToCloud(
+                                                    new com.example.expensetrackerapp.data.repository.ExpenseRepository.OnSyncCompleteListener() {
+                                                        @Override
+                                                        public void onSuccess(int syncedCount) {
+                                                            preferenceManager.setGuestDataExists(false);
+                                                            if (syncedCount > 0) {
+                                                                android.widget.Toast
+                                                                        .makeText(RegisterActivity.this,
+                                                                                "Synced " + syncedCount
+                                                                                        + " items from guest session",
+                                                                                android.widget.Toast.LENGTH_LONG)
+                                                                        .show();
+                                                            }
+                                                            showLoading(false);
+                                                            navigateToMain();
+                                                        }
+
+                                                        @Override
+                                                        public void onFailure(String error) {
+                                                            showError("Failed to sync guest data: " + error);
+                                                            showLoading(false);
+                                                            navigateToMain();
+                                                        }
+                                                    });
+                                } else {
+                                    showLoading(false);
+                                    navigateToMain();
+                                }
                             }
 
                             @Override
