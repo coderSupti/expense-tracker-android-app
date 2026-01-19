@@ -78,6 +78,7 @@ public class MainActivity extends AppCompatActivity implements FirebaseAuth.Auth
                 return false;
             }
 
+
             loadFragment(fragment, tag);
             return true;
         });
